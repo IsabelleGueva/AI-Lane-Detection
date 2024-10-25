@@ -1,0 +1,43 @@
+import cv2
+'''
+cv2 will allow us to use image reading functions that 
+load the image into our workspace. 
+
+To begin, we need to 
+read the image, (cv2.imread)
+convert to grayscale (cv2.cvtColor)
+apply edge detection (Canny or Sobel edge)
+
+'''
+
+def load_image(image_path):
+    image = cv2.imread(image_path)
+    #put in image path when we get the library 
+    image = cv2.cvtColor(image, cv2.COLORBGR@RGB) 
+    #converting image to RGB for display
+    return image
+    #will add more stuff when we get all of our images!
+
+def display_image(image, title = "Picture"):
+    plt.figure(figsize=(10.5))
+    plt.imshow(image)
+    plt.title(title)
+    plt.show()
+
+#image = load_image(image link)
+#display_image(image, 'original pic')
+
+#starting edge detection
+def preprocess_image(image):
+    #convert the image to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+    #applying Gaussian blurr
+    blur = cv2.GaussianBlur(gray, (5,5),0)
+
+    #canny edge detection
+    edges = cv2.Canny(blur, 50, 150)
+    return edges
+
+edges = preprocess_image(image)
+display_image(edges, 'Edges Detected')
