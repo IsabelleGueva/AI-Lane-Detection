@@ -1,0 +1,9 @@
+import cv2
+# Import OpenCV library, which provides functions for image and video processing
+
+def read_image(file_path):
+    img = cv2.imread(file_path) 
+#Loads image into path
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#Converts image into RBG
+    return img_rgb 
