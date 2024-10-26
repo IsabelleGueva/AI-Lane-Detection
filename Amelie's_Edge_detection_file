@@ -7,3 +7,4 @@ def read_image(file_path):
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 #Converts image into RBG
     return img_rgb 
+$Returns converted imagie
