@@ -1,10 +1,13 @@
+#Import OpenCV for image processing
 import cv2
-# Import OpenCV library, which provides functions for image and video processing
 
+#Load an image from file and convert it from BGR to RGB format
 def read_image(file_path):
-    img = cv2.imread(file_path) 
-#Loads image into path
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-#Converts image into RBG
-    return img_rgb 
-$Returns converted imagie
+    img = cv2.imread(file_path)
+    return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+#Detect edges in the image
+def detect_edges(img_rgb):
+    gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)  #Convert to grayscale
+    blurred = cv2.GaussianBlur(gray, (5, 5), 1.4)  #Apply blur to reduce noise
+    return cv2.Canny(blurred, 50, 150)  #Detect edges
