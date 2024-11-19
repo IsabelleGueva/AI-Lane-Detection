@@ -18,26 +18,42 @@ def load_image(image_path):
     return image
     #will add more stuff when we get all of our images!
 
+
 def display_image(image, title = "Picture"):
-    plt.figure(figsize=(10.5))
-    plt.imshow(image)
-    plt.title(title)
-    plt.show()
+    cv2.imshow(title, image)
+    cv2.waitKey(0)  # Wait until a key is pressed
+    cv2.destroyAllWindows()  # Close all OpenCV windows
 
 #image = load_image(image link)
 #display_image(image, 'original pic')
 
-#starting edge detection
-def preprocess_image(image):
-    #convert the image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+# sobel edge detection
+def sobel_edge_detection(UIimage):
 
-    #applying Gaussian blurr
-    blur = cv2.GaussianBlur(gray, (5,5),0)
+    # Convert image to grayscale
+    gray = cv2.cvtColor(UIimage, cv2.COLOR_BGR2GRAY)
 
-    #canny edge detection
-    edges = cv2.Canny(blur, 50, 150)
-    return edges
+    # Calculate Sobel gradients
+    sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)  # x-direction
+    sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)  # y-direction
 
-edges = preprocess_image(image)
-display_image(edges, 'Edges Detected')
+    # Combine gradients and convert to uint8
+    sobel_combined = cv2.magnitude(sobelx, sobely)
+    sobel_combined = cv2.convertScaleAbs(sobel_combined)
+    return sobel_combined
+
+# Main workflow
+if __name__ == "__main__":
+    image_path = 'path_to_image.jpg'  # Replace with the actual image path
+
+    try:
+        # Load the original image
+        original_image = load_image(image_path)
+        display_image(original_image, "Original Image")
+
+        # Apply Sobel edge detection
+        sobel_edges = sobel_edge_detection(original_image)
+        display_image(sobel_edges, "Sobel Edge Detection")
+
+    except FileNotFoundError as e:
+        print(e)
