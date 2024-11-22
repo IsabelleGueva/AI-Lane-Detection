@@ -35,17 +35,6 @@ def imageprocessing(imagepath):
     grayscaleframe = grayscaleconversion(image)  
     # apply Gaussian blur to the grayscale image
     blurredframe = gaussianblur(grayscaleframe)
-    # display the results
-    cv2.imshow('Original Image', image)  # shows the original image
-    cv2.imshow('Grayscale Image', grayscaleframe)  # shows the grayscale image
-    cv2.imshow('Gaussian Blurred Image', blurredframe)  # shows the blurred image
-    # the argument 0 means it will wait indefinitely until any key is pressed
-    # helpful when displaying images so the image window doesn’t open and close immediately
-    # gives the user time to view the images before they disappear
-    cv2.waitKey(0)  
-    # when you create windows using imshow(), OpenCV allocates system resources 
-    # to manage those windows so calling this frees up these resources
-    cv2.destroyAllWindows()  # closes all OpenCV windows (so no memory leaks)
     # return the processed (blurred) image
     return blurredframe
 
