@@ -65,6 +65,33 @@ def videoprocessing(videopath):
 # end of image preprocessing
 
 # edge detection 
+#Detect edges in the image
+def detect_edges(blurredframe):
+    edges=cv2.Canny(blurredframe, 50, 150)  #Detect edges
+    return edges  #Detect edges
+
+#Display images
+def display_images(original, edges):
+    plt.figure(figsize=(12, 6))  # Set the figure size
+    plt.subplot(1, 2, 1)  # Create a subplot for the original image
+    plt.imshow(original)  # Show the original image
+    plt.title("Original Image")  # Title for original image
+    plt.axis("off")  # Turn off the axis
+
+    plt.subplot(1, 2, 2)  # Create a subplot for the edge-detected image
+    plt.imshow(edges, cmap="gray")  # Show the edge-detected image
+    plt.title("Edge Detected Image")  # Title for edge-detected image
+    plt.axis("off")  # Turn off the axis
+
+    plt.show()  # Display the images
+
+#Main- running the code
+image_path = "!REPLACE WITH FILE PATH!"  # Replace with image file path
+img_rgb = read_image(image_path)  # Read and convert the image
+edges = detect_edges(img_rgb)  # Perform edge detection
+
+# Display the original and edge-detected images
+display_images(img_rgb, edges)
 
 # region of interest selection 
 def regionInterest(image):
