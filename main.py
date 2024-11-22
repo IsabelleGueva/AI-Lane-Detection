@@ -68,28 +68,30 @@ def videoprocessing(videopath):
 
 # region of interest selection 
 def regionInterest(image):
-  #creates a blank mask that is the same size as our image
-  mask = np.zeros_like(image)
-  
-  #covers the central area of an image
-  rows, cols = image.shape[:2]
-  
-  #30% across the width of the image & 40% down from the top
-  topLeft = int(cols * 0.3), int(cols * 0.7)
-  
-  #finds a point 40% across the width of the image & 90% down from the top
-  rightBottom = int(rows * 0.4), int(rows * 0.9)
-  
-  #draws a rectangle on the mask image, 255 is used for grayscale images
-  cv2.rectangle(mask, topLeft, rightBottom, 255, thickness=-1)
-  
-  #performs a bitwise operation between the image and the mask and blacks out the rest of the image only keeping the 
-  #rectangle part of the image with our specific points from topLeft and rightBottom
-  masked_image = cv2.bitwise_and(image, mask)
+    #creates a blank mask that is the same size as our image
+    mask = np.zeros_like(image)
+    #covers the central area of an image
+    rows, cols = image.shape[:2]
+    #30% across the width of the image & 40% down from the top
+    topLeft = int(cols * 0.3), int(cols * 0.7)
+    #finds a point 40% across the width of the image & 90% down from the top
+    rightBottom = int(rows * 0.4), int(rows * 0.9)
+    #draws a rectangle on the mask image, 255 is used for grayscale images
+    cv2.rectangle(mask, topLeft, rightBottom, 255, thickness=-1)
 
-return masked_image
+    #performs a bitwise operation between the image and the mask and blacks out the rest of the image only keeping the 
+    #rectangle part of the image with our specific points from topLeft and rightBottom
+    masked_image = cv2.bitwise_and(image, mask)
+    return masked_image
 
 # detect lines with Hough Transform 
+def hough_transform(image): 
+    rho = 1              #looks at every pixels surrounding it to find lines
+    theta = np.pi/180    #finds the pixels within a 1-pixel precision and finds angles within 1-degree precision
+    threshold = 10       #Only lines that are greater than threshold will be returned; must be within 1-degree so it can still be considered “straight” line
+    minLineLength = 10   #Line segments shorter than that are rejected; in this case, longer than 20 pixels
+    maxLineGap = 350     #Maximum allowed gap between points on the same line to link them; necessary for broken lane lines
+    return cv2.HoughLinesP(image, rho = rho, theta = theta, threshold = threshold, minLineLength = minLineLength, maxLineGap = maxLineGap)
 
 # draw the lines & combine with original image 
 def draw_lines(image, lines, color = [255, 0, 0], thickness = 2):
