@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import os  # imports os to check for file existence
-
+import matplotlib.pyplot as plt
 # import packages
 
 # beginning of image preprocessing
@@ -87,7 +87,7 @@ def display_images(original, edges):
 
 #Main- running the code
 image_path = "!REPLACE WITH FILE PATH!"  # Replace with image file path
-img_rgb = read_image(image_path)  # Read and convert the image
+img_rgb = imageprocessing(image_path)  # Read and convert the image
 edges = detect_edges(img_rgb)  # Perform edge detection
 
 # Display the original and edge-detected images
