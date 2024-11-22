@@ -72,6 +72,10 @@ def detect_edges(blurredframe):
 
 #Display images
 def display_images(original, edges):
+    # Check and convert the data type if necessary
+    if original.dtype != np.uint8 and original.dtype != np.float32:
+        original = original.astype(np.uint8)
+
     plt.figure(figsize=(12, 6))  # Set the figure size
     plt.subplot(1, 2, 1)  # Create a subplot for the original image
     plt.imshow(original)  # Show the original image
@@ -86,7 +90,7 @@ def display_images(original, edges):
     plt.show()  # Display the images
 
 #Main- running the code
-image_path = "!REPLACE WITH FILE PATH!"  # Replace with image file path
+image_path = "solidYellowLeft.and.brokenWhiteRight.png"  # Replace with image file path
 img_rgb = imageprocessing(image_path)  # Read and convert the image
 edges = detect_edges(img_rgb)  # Perform edge detection
 
@@ -118,7 +122,8 @@ def hough_transform(image):
     threshold = 10       #Only lines that are greater than threshold will be returned; must be within 1-degree so it can still be considered “straight” line
     minLineLength = 10   #Line segments shorter than that are rejected; in this case, longer than 20 pixels
     maxLineGap = 350     #Maximum allowed gap between points on the same line to link them; necessary for broken lane lines
-    return cv2.HoughLinesP(image, rho = rho, theta = theta, threshold = threshold, minLineLength = minLineLength, maxLineGap = maxLineGap)
+    lines = cv2.HoughLinesP(image, rho = rho, theta = theta, threshold = threshold, minLineLength = minLineLength, maxLineGap = maxLineGap)
+    return lines if lines is not None else []
 
 # draw the lines & combine with original image 
 def draw_lines(image, lines, color = [255, 0, 0], thickness = 2):
@@ -135,6 +140,18 @@ def draw_lines(image, lines, color = [255, 0, 0], thickness = 2):
     return image
 
 # process image & final return 
+file_path = "solidYellowLeft.and.brokenWhiteRight.png"
+validated_file = validate_file(file_path)
+print(validated_file)
+processedimage = imageprocessing(file_path)
+edges = detect_edges(processedimage)
+image = display_images(processedimage, edges)
+print("images displayed")
+focused_image = regionInterest(processedimage)
+print("images focused")
+transformed_image = hough_transform(focused_image)
+draw_lines(transformed_image, transformed_image, 255, 2)
+print("lines drawn")
 
 # *processed outputs from imageprocessing() or videoprocessing()
 # will be passed to edge detection and other stages here*
