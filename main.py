@@ -36,7 +36,7 @@ def imageprocessing(imagepath):
     # apply Gaussian blur to the grayscale image
     blurredframe = gaussianblur(grayscaleframe)
     # return the processed (blurred) image
-    return blurredframe
+    return image, blurredframe
 
 # main processing function for videos
 def videoprocessing(videopath):
@@ -90,12 +90,12 @@ def display_images(original, edges):
     plt.show()  # Display the images
 
 #Main- running the code
-image_path = "solidYellowLeft.and.brokenWhiteRight.png"  # Replace with image file path
-img_rgb = imageprocessing(image_path)  # Read and convert the image
+"""image_path = "solidYellowLeft.and.brokenWhiteRight.png"  # Replace with image file path
+original_image, img_rgb = imageprocessing(image_path)  # Read and convert the image
 edges = detect_edges(img_rgb)  # Perform edge detection
 
 # Display the original and edge-detected images
-display_images(img_rgb, edges)
+display_images(img_rgb, edges)"""
 
 # region of interest selection 
 def regionInterest(image):
@@ -121,7 +121,7 @@ def hough_transform(image):
     theta = np.pi/180    #finds the pixels within a 1-pixel precision and finds angles within 1-degree precision
     threshold = 10       #Only lines that are greater than threshold will be returned; must be within 1-degree so it can still be considered “straight” line
     minLineLength = 10   #Line segments shorter than that are rejected; in this case, longer than 20 pixels
-    maxLineGap = 350     #Maximum allowed gap between points on the same line to link them; necessary for broken lane lines
+    maxLineGap = 600     #Maximum allowed gap between points on the same line to link them; necessary for broken lane lines
     lines = cv2.HoughLinesP(image, rho = rho, theta = theta, threshold = threshold, minLineLength = minLineLength, maxLineGap = maxLineGap)
     return lines if lines is not None else []
 
@@ -140,17 +140,18 @@ def draw_lines(image, lines, color = [255, 0, 0], thickness = 2):
     return image
 
 # process image & final return 
-file_path = "solidYellowLeft.and.brokenWhiteRight.png"
+file_path = "solidYellowLeft2.png"
 validated_file = validate_file(file_path)
 print(validated_file)
-processedimage = imageprocessing(file_path)
+original_image, processedimage = imageprocessing(file_path)
 edges = detect_edges(processedimage)
-image = display_images(processedimage, edges)
+image = display_images(original_image, edges)
 print("images displayed")
 focused_image = regionInterest(processedimage)
 print("images focused")
-transformed_image = hough_transform(focused_image)
-draw_lines(transformed_image, transformed_image, 255, 2)
+lines = hough_transform(focused_image)
+final_image = draw_lines(processedimage, lines, [255, 0, 0], 10)
+display_images(processedimage, final_image)
 print("lines drawn")
 
 # *processed outputs from imageprocessing() or videoprocessing()
